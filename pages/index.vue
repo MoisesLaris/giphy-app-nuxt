@@ -1,69 +1,61 @@
 <template>
-  <div class="container">
-  <Navbar/>
-    <div>
-      <Logo />
-      <h1 class="title">
-        giphy-app
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+  <div>
+    <div class="container-fluid">
+      <no-ssr>
+        <vue-masonry-wall :items="gifs" :options="{width: 400, padding: 10}">
+          <template v-slot:default="{item}">
+            <img :src="item" />
+          </template>
+        </vue-masonry-wall>
+      </no-ssr>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import Navbar from '@/components/Navbar.vue'; // @ is an alias to /src
+<script>
+import { Component, Vue } from "vue-property-decorator";
+import Navbar from "@/components/Navbar.vue"; // @ is an alias to /src
+import Gif from "@/components/Gif.vue"; // @ is an alias to /src
+import axios, { AxiosResponse } from "axios";
+import { GIF, Gif_model } from "~/models/test";
+import VueMasonryWall from "vue-masonry-wall";
+import NoSSR from "vue-no-ssr";
+
 @Component({
   components: {
     Navbar,
-  },
+    Gif,
+    VueMasonryWall,
+    NoSSR
+  }
 })
+@Component
 export default class Home extends Vue {
+  gifs = [];
 
+  created() {
+    this.getGifs();
+  }
+
+  async getGifs(){
+    let arrGifs = [], gifs = await axios.get(
+      "https://api.giphy.com/v1/gifs/trending?api_key=a8OMRUP4eiqbeYG0E599hEFqMXZZBQxP&limit=30&rating=g"
+    );
+    arrGifs = gifs.data.data.map(obj => {
+      return obj.images.downsized_medium.url;
+    });
+
+    this.gifs.push(...arrGifs);
+    console.log(this.gifs)
+  }
 
 }
-
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
+<style scoped>
 .title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   display: block;
   font-weight: 300;
   font-size: 100px;
@@ -81,5 +73,17 @@ export default class Home extends Vue {
 
 .links {
   padding-top: 15px;
+}
+
+img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  line-height: 0;
+  display: block;
+}
+
+.masonry-wall {
+  margin: 0px !important;
 }
 </style>

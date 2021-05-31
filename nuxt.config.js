@@ -21,7 +21,9 @@ export default {
     ],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [],
+    plugins: [
+        { src: '~/plugins/vue-masonry', ssr: false }
+    ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -34,7 +36,8 @@ export default {
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
-        'bootstrap-vue/nuxt', ['nuxt-fontawesome', {
+        'bootstrap-vue/nuxt',
+        '@nuxtjs/axios', ['nuxt-fontawesome', {
             component: 'fa',
             imports: [
                 //import whole set
@@ -53,6 +56,10 @@ export default {
             ]
         }]
     ],
+
+    axios: {
+        // proxy: true
+    },
 
     bootstrapVue: {
         bootstrapCSS: false,
