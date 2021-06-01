@@ -34,7 +34,7 @@ export default class Navbar extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .icon{
   font-size: 1.5rem;

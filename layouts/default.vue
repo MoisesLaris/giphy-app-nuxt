@@ -1,11 +1,36 @@
 <template>
   <div>
+    <div
+    id="app-main"
+    tabindex="-1"
+    @keyup="onType"
+    ></div>
     <Navbar />
     <Nuxt />
   </div>
 </template>
 
-<style>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+
+@Component
+export default class Main extends Vue {
+    created() {
+      const component = this;
+      this.handler = function (e) {
+        console.log(e);
+        component.$emit('keyup', e);
+      }
+      window.addEventListener('keyup', this.handler);
+    }
+    beforeDestroy() {
+      window.removeEventListener('keyup', this.handler);
+    }
+}
+
+</script>
+
+<style lang="scss">
 html {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -18,40 +43,18 @@ html {
   box-sizing: border-box;
 }
 
-
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
 }
+.animate {
+  transition: all 0.3s;
 
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
-}
-
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
-}
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.05, 1.05);
+  }
 }
 </style>

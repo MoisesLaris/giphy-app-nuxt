@@ -1,11 +1,5 @@
 
-export interface GIF {
-    data:       Gif_model[];
-    pagination: Pagination;
-    meta:       Meta;
-}
-
-export interface Gif_model {
+export interface Gif {
     type:                       Type;
     id:                         string;
     url:                        string;
@@ -100,16 +94,4 @@ export interface User {
     instagram_url: string;
     website_url:   string;
     is_verified:   boolean;
-}
-
-export interface Meta {
-    status:      number;
-    msg:         string;
-    response_id: string;
-}
-
-export interface Pagination {
-    total_count: number;
-    count:       number;
-    offset:      number;
 }

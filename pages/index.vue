@@ -4,7 +4,7 @@
       <no-ssr>
         <vue-masonry-wall :items="gifs" :options="{width: 400, padding: 10}">
           <template v-slot:default="{item}">
-            <img :src="item" />
+            <GifPreview :gif="item"/>
           </template>
         </vue-masonry-wall>
       </no-ssr>
@@ -12,47 +12,43 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Navbar from "@/components/Navbar.vue"; // @ is an alias to /src
-import Gif from "@/components/Gif.vue"; // @ is an alias to /src
+import GifPreview from "@/components/GifPreview.vue"; // @ is an alias to /src
 import axios, { AxiosResponse } from "axios";
-import { GIF, Gif_model } from "~/models/test";
 import VueMasonryWall from "vue-masonry-wall";
 import NoSSR from "vue-no-ssr";
+import { Gif, Rating } from "~/models/gif.interface";
 
 @Component({
   components: {
     Navbar,
-    Gif,
+    GifPreview,
     VueMasonryWall,
     NoSSR
   }
 })
 @Component
 export default class Home extends Vue {
-  gifs = [];
+  gifs: Gif[] = [];
 
   created() {
     this.getGifs();
   }
 
-  async getGifs(){
-    let arrGifs = [], gifs = await axios.get(
-      "https://api.giphy.com/v1/gifs/trending?api_key=a8OMRUP4eiqbeYG0E599hEFqMXZZBQxP&limit=30&rating=g"
-    );
-    arrGifs = gifs.data.data.map(obj => {
-      return obj.images.downsized_medium.url;
-    });
+  async getGifs() {
+    let arrGifs: Gif[] = [],
+      gifs = await this.$getTrendingGifs({limit: 25, rating: Rating.G});
+
+    arrGifs = gifs.data.data;
 
     this.gifs.push(...arrGifs);
-    console.log(this.gifs)
   }
-
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .title {
   font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -81,6 +77,16 @@ img {
   height: 100%;
   line-height: 0;
   display: block;
+}
+
+.gif {
+  position: relative;
+  transition: all 0.3s;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.05, 1.05);
+  }
 }
 
 .masonry-wall {
