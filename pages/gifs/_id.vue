@@ -29,7 +29,7 @@
     <div class="col-lg-8 col-md-6">
       <span class="title">{{gif.title}}</span>
       <div class="d-flex justify-content-start align-items-center">
-        <img class="image gif-image" :src="gif.images.original.url" alt />
+        <img style="backgroud-color: pink;" class="image gif-image" :src="gif.images.original.url" alt />
       </div>
     </div>
     <div class="col-lg-2 col-md-3">

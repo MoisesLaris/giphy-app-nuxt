@@ -1,6 +1,8 @@
 <template>
   <nuxt-link :to="'/gifs/' + gif.id">
-    <img class="animate" :src="gif.images.downsized_medium.url" alt />
+    <div class="image" :style="{'height': gif.images.downsized_medium.height, 'width': gif.images.downsized_medium.width}">
+      <img class="animate" :src="gif.images.downsized_medium.url" alt />
+    </div>
   </nuxt-link>
 </template>
 
@@ -12,11 +14,16 @@ import { Gif } from "~/models/gif.interface";
 export default class GifPreview extends Vue {
   @Prop() gif!: Gif;
 
-  onClickedGif() {}
+  created(){
+  }
+
 }
 </script>
 
 <style lang="scss" scoped>
+.image{
+  background-color: #343a40;
+}
 img {
   object-fit: cover;
   width: 100%;

@@ -26,7 +26,8 @@
     "types": [
       "@nuxt/types",
       "@types/node",
-      "@nuxtjs/axios"
+      "@nuxtjs/axios",
+      "bootstrap-vue"
     ]
   },
   "exclude": [
@@ -36,6 +37,7 @@
   ],
   "include": [
     "custom/no-ssr.d.ts",
-    "custom/vue-masonry-wall.d.ts"
+    "custom/vue-masonry-wall.d.ts",
+    // "custom/vue-keypress.d.ts"
   ]
 }

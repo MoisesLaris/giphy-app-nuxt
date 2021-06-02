@@ -1,10 +1,5 @@
 <template>
   <div>
-    <div
-    id="app-main"
-    tabindex="-1"
-    @keyup="onType"
-    ></div>
     <Navbar />
     <Nuxt />
   </div>
@@ -15,19 +10,8 @@ import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class Main extends Vue {
-    created() {
-      const component = this;
-      this.handler = function (e) {
-        console.log(e);
-        component.$emit('keyup', e);
-      }
-      window.addEventListener('keyup', this.handler);
-    }
-    beforeDestroy() {
-      window.removeEventListener('keyup', this.handler);
-    }
-}
 
+}
 </script>
 
 <style lang="scss">

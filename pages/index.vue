@@ -1,10 +1,12 @@
 <template>
   <div>
-    <div class="container-fluid">
+    <Searchbar @onSearch="onSearch"></Searchbar>
+    <Loading v-if="loadingData == true"/>
+     <div class="container-fluid" v-else>
       <no-ssr>
-        <vue-masonry-wall :items="gifs" :options="{width: 400, padding: 10}">
-          <template v-slot:default="{item}">
-            <GifPreview :gif="item"/>
+        <vue-masonry-wall :items="gifs" :options="{ width: 400, padding: 10 }">
+          <template v-slot:default="{ item }">
+            <GifPreview :gif="item" />
           </template>
         </vue-masonry-wall>
       </no-ssr>
@@ -15,35 +17,51 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Navbar from "@/components/Navbar.vue"; // @ is an alias to /src
+import Searchbar from "@/components/Searchbar.vue"; // @ is an alias to /src
 import GifPreview from "@/components/GifPreview.vue"; // @ is an alias to /src
-import axios, { AxiosResponse } from "axios";
+import Loading from "@/components/Loading.vue"; // @ is an alias to /src
 import VueMasonryWall from "vue-masonry-wall";
 import NoSSR from "vue-no-ssr";
 import { Gif, Rating } from "~/models/gif.interface";
+import { TrendingGif } from "~/models/trending-gif.interface";
+import { AxiosResponse } from "axios";
 
 @Component({
   components: {
     Navbar,
     GifPreview,
     VueMasonryWall,
-    NoSSR
-  }
+    NoSSR,
+    Searchbar,
+    Loading
+  },
 })
 @Component
 export default class Home extends Vue {
+  loadingData: boolean = false;
   gifs: Gif[] = [];
 
   created() {
     this.getGifs();
   }
 
+
   async getGifs() {
+    this.loadingData = true;
     let arrGifs: Gif[] = [],
-      gifs = await this.$getTrendingGifs({limit: 25, rating: Rating.G});
+    gifs: AxiosResponse<TrendingGif> = await this.$getTrendingGifs({ limit: 25, rating: Rating.G });
 
     arrGifs = gifs.data.data;
 
     this.gifs.push(...arrGifs);
+    this.loadingData = false;
+  }
+
+  async onSearch(text: string){
+    this.loadingData = true;
+    let search: AxiosResponse<TrendingGif> = await this.$searchGifs(text, 25, 0);
+    this.gifs = search.data.data;
+    this.loadingData = false;
   }
 }
 </script>

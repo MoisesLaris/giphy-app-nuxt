@@ -1,11 +1,13 @@
 <template>
   <div class="container-fluid" style="border-bottom: 1px solid #212529">
     <div class="d-flex justify-content-between align-items-center p-4">
-      <img src="~assets/img/logo/giphy-logo.png" height="30px" alt />
-      <span class="text-primary">Type to search</span>
+      <img class="d-none d-md-block" src="~assets/img/logo/giphy-logo.png" height="30px" alt />
+      <img class="d-md-none" src="~assets/img/logo/logo.png" height="30px" alt />
+      <span class="text-primary d-none d-md-block">Type enter to search</span>
       <div class="d-flex justify-content-center align-items-center right-items">
-        <fa class="text-white icon" :icon="['fas', 'plus-circle']" />
-        <div class="vertical-bar"></div>
+        <fa :click="on" class="text-white icon d-md-none" :icon="['fas', 'search']" />
+        <fa class="text-white icon d-none d-md-block" :icon="['fas', 'plus-circle']" />
+        <div class="vertical-bar d-none d-md-block"></div>
         <fa class="text-white icon" :icon="['far', 'bell']" />
         <img class="profile-image" src="~assets/img/profile/user.jpg" alt />
       </div>
@@ -16,12 +18,7 @@
 <script lang="ts">
 import {
   Component,
-  Inject,
-  Model,
-  Prop,
-  Provide,
   Vue,
-  Watch
 } from "nuxt-property-decorator";
 interface User {
   firstName: string;
@@ -31,6 +28,7 @@ interface User {
 @Component
 export default class Navbar extends Vue {
   message: string = "This is a message";
+
 }
 </script>
 
