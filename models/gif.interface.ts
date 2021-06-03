@@ -1,3 +1,4 @@
+import { Rating } from "./rating.enum";
 
 export interface Gif {
     type:                       Type;
@@ -73,10 +74,6 @@ export interface The4_K {
     width:    string;
     mp4_size: string;
     mp4:      string;
-}
-
-export enum Rating {
-    G = "g",
 }
 
 export enum Type {

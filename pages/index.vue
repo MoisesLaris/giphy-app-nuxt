@@ -1,10 +1,44 @@
 <template>
   <div>
     <Searchbar @onSearch="onSearch"></Searchbar>
-    <Loading v-if="loadingData == true"/>
-     <div class="container-fluid" v-else>
+    <Loading v-if="loadingData == true" />
+    <div v-else>
+      <div class="my-4">
+        <div
+          class="d-flex justify-content-between align-items-center"
+          v-if="$store.state.gifState.showTrending == true"
+        >
+          <div class="d-flex justify-content-between align-items-center">
+            <fa class="text-primary" :icon="['fas', 'chart-line']" />
+            <span class="ml-2">Trending</span>
+          </div>
+          <span>All the GIFs</span>
+        </div>
+        <div
+          class="d-flex align-items-center justify-content-between"
+          v-if="$store.state.gifState.showTrending == false"
+        >
+          <div>
+            <span class="searched-title">{{ text_to_search }}</span
+            >&nbsp;<span class="total-gifs"
+              >{{ $store.state.gifState.total }} GIFs</span
+            >
+          </div>
+          <div>
+            <span class="sort"
+              ><b class="mr-2">Sort:</b>
+              <b class="mr-2">Relevant</b> Newest</span
+            >
+          </div>
+        </div>
+      </div>
+
       <no-ssr>
-        <vue-masonry-wall :items="gifs" :options="{ width: 400, padding: 10 }">
+        <vue-masonry-wall
+          :items="$store.state.gifState.gifs"
+          :options="{ width: 400, padding: 10 }"
+          @append="appendGifs"
+        >
           <template v-slot:default="{ item }">
             <GifPreview :gif="item" />
           </template>
@@ -22,9 +56,10 @@ import GifPreview from "@/components/GifPreview.vue"; // @ is an alias to /src
 import Loading from "@/components/Loading.vue"; // @ is an alias to /src
 import VueMasonryWall from "vue-masonry-wall";
 import NoSSR from "vue-no-ssr";
-import { Gif, Rating } from "~/models/gif.interface";
-import { TrendingGif } from "~/models/trending-gif.interface";
-import { AxiosResponse } from "axios";
+import { Gif } from "~/models/gif.interface";
+import { Rating } from "~/models/rating.enum";
+import GifState from "~/store/gifState";
+import { Action, Mutation } from "nuxt-property-decorator";
 
 @Component({
   components: {
@@ -33,35 +68,52 @@ import { AxiosResponse } from "axios";
     VueMasonryWall,
     NoSSR,
     Searchbar,
-    Loading
+    Loading,
   },
 })
 @Component
 export default class Home extends Vue {
+  @Action("gifState/trendingGifs") getTrendingAction: any;
+  @Action("gifState/searchGifs") searchGifsAction: any;
+
+  @Mutation("gifState/resetGifArray") resetGifArray: any;
+
+  offset = 0;
+  text_to_search!: string;
   loadingData: boolean = false;
-  gifs: Gif[] = [];
+  gifs: Gif[] = (this.$store.state.gifState as GifState).gifs;
 
   created() {
-    this.getGifs();
+    console.log(this.$store.state);
+    if (!this.gifs.length) {
+      this.getTrendingGifs();
+    }
   }
 
-
-  async getGifs() {
+  async getTrendingGifs() {
     this.loadingData = true;
-    let arrGifs: Gif[] = [],
-    gifs: AxiosResponse<TrendingGif> = await this.$getTrendingGifs({ limit: 25, rating: Rating.G });
-
-    arrGifs = gifs.data.data;
-
-    this.gifs.push(...arrGifs);
+    await this.getTrendingAction({ limit: 30, rating: Rating.G });
     this.loadingData = false;
   }
 
-  async onSearch(text: string){
+  async onSearch(text: string) {
+    this.text_to_search = text;
+    this.offset = 0;
     this.loadingData = true;
-    let search: AxiosResponse<TrendingGif> = await this.$searchGifs(text, 25, 0);
-    this.gifs = search.data.data;
+    this.resetGifArray();
+    await this.searchGifsAction({ text: text, limit: 30, offset: this.offset });
     this.loadingData = false;
+  }
+
+  appendGifs() {
+    //We will only append gifs if we are searching, this is because trending endpoint does not give the option to bring more than a specific number of items.
+    if ((this.$store.state.gifState as GifState).showTrending == false) {
+      this.searchGifsAction({
+        text: this.text_to_search,
+        limit: 30,
+        offset: (this.offset += 30),
+      });
+    }
   }
 }
 </script>
@@ -109,5 +161,20 @@ img {
 
 .masonry-wall {
   margin: 0px !important;
+}
+.searched-title {
+  font-size: 19px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.total-gifs {
+  font-size: 14px;
+  color: rgb(207, 207, 207);
+}
+
+.sort {
+  font-size: 14px;
+  cursor: pointer;
 }
 </style>

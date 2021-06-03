@@ -1,7 +1,7 @@
 <template>
-  <nuxt-link :to="'/gifs/' + gif.id">
-    <div class="image" :style="{'height': gif.images.downsized_medium.height, 'width': gif.images.downsized_medium.width}">
-      <img class="animate" :src="gif.images.downsized_medium.url" alt />
+  <nuxt-link v-if="gif" :to="'/gifs/' + gif.id">
+    <div class="image" :style="{'height': gif.images.preview_gif.height, 'width': gif.images.preview_gif.width}">
+      <img class="animate" :src="gif.images.preview_gif.url" alt />
     </div>
   </nuxt-link>
 </template>

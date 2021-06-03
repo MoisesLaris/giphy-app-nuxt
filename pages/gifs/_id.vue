@@ -51,7 +51,9 @@
       </div>
     </div>
   </div>
-  <div v-else>Loading ...</div>
+  <div v-else>
+    <Loading/>
+  </div>
 </template>
 
 <script lang="ts">
@@ -59,9 +61,20 @@ import { Component, Vue } from "vue-property-decorator";
 import { AxiosResponse } from "axios";
 import { GifByID } from "../../models/gif-by-id.interface";
 import { Gif, User } from "~/models/gif.interface";
+import { Action } from "vuex-class";
+import GifState from "~/store/gifState";
+import Loading from "~/components/Loading.vue"; // @ is an alias to /src
+
+@Component({
+  components:{
+    Loading
+  }
+})
 
 @Component
 export default class DetailedGif extends Vue {
+  @Action('gifState/gifById') getGif: any;
+
   gif!: Gif;
   user!: User | undefined;
   isLoaded: boolean = false;
@@ -72,12 +85,10 @@ export default class DetailedGif extends Vue {
   }
 
   async getGifById(id: string) {
-    let data: AxiosResponse<GifByID> = await this.$getGifById(id);
-    this.gif = data.data.data;
-    this.user = this.gif.user;
+    await this.getGif(id);
+    this.user = (this.$store.state.gifState as GifState).gif.user;
+    this.gif = (this.$store.state.gifState as GifState).gif;
     this.isLoaded = true;
-    console.log(this.gif);
-    // this.gif.user.
   }
 
   //The tags will be generated with the name of the GIF since we don't have a property that provides that.

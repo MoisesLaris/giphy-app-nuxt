@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <b-modal id="modal-search" size="lg" :hide-footer="true" :hide-header="true">
+    <b-modal
+      id="modal-search"
+      size="lg"
+      :hide-footer="true"
+      :hide-header="true"
+    >
       <div class="d-flex flex-row justify-content-center align-items-center">
         <fa class="search-icon" :icon="['fas', 'search']" />
         <input
@@ -17,16 +22,26 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Ref } from "vue-property-decorator";
-
+import { Mutation } from "nuxt-property-decorator";
+import { Component, Vue, Ref, Watch } from "vue-property-decorator";
+import GifState from "~/store/gifState";
 @Component
 export default class Searchbar extends Vue {
+  @Mutation("gifState/setStatusBar") setStatusBar: any;
+
   @Ref() readonly search!: HTMLInputElement;
 
   text_search: string = "";
-  showModal: boolean = false;
 
-  created() {}
+  unsubscribeStore: any;
+  created() {
+    this.unsubscribeStore = this.$store.subscribe(
+      (mutation: any, state: any) => {
+        let showModal = (state.gifState as GifState).showSearchBar;
+        this.openModal(showModal);
+      }
+    );
+  }
 
   mounted() {
     window.addEventListener("keypress", this.onKeyUp);
@@ -34,30 +49,33 @@ export default class Searchbar extends Vue {
 
   destroyed() {
     window.removeEventListener("keypress", this.onKeyUp);
+    this.unsubscribeStore();
   }
 
   onKeyUp(event: KeyboardEvent) {
     console.log(event);
     if (event.key == "Enter") {
+      let showModal = (this.$store.state.gifState as GifState).showSearchBar;
+      this.setStatusBar(!showModal)
+      this.openModal((this.$store.state.gifState as GifState).showSearchBar, "Enter");
+    }
+  }
 
-      //this will emit the current value to the father component
-      if (this.showModal == true) {
-        this.$bvModal.hide("modal-search");
-        if(this.text_search != "" && this.text_search != undefined){
-            this.$emit('onSearch', this.text_search);
+  openModal(show: boolean, key: string = "") {
+    //this will emit the current value to the father component
+    if (show == true) {
+      this.$bvModal.show("modal-search");
+      this.text_search = "";
+      setTimeout(() => {
+        this.$nextTick(() => this.search.focus());
+      }, 100);
+    } else {
+      this.$bvModal.hide("modal-search");
+      if (this.text_search != "" && this.text_search != undefined) {
+        if (key != "") {
+          this.$emit("onSearch", this.text_search);
         }
       }
-
-      //This will reset the input value and focus it
-      if (this.showModal == false) {
-        this.$bvModal.show("modal-search");
-        this.text_search = "";
-        setTimeout(() => {
-          this.$nextTick(() => this.search.focus());
-        }, 100);
-      }
-
-      this.showModal = !this.showModal;
     }
   }
 }

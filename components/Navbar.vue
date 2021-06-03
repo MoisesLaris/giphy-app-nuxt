@@ -1,11 +1,11 @@
 <template>
-  <div class="container-fluid" style="border-bottom: 1px solid #212529">
+  <div class="container" style="border-bottom: 1px solid #212529">
     <div class="d-flex justify-content-between align-items-center p-4">
       <img class="d-none d-md-block" src="~assets/img/logo/giphy-logo.png" height="30px" alt />
       <img class="d-md-none" src="~assets/img/logo/logo.png" height="30px" alt />
-      <span class="text-primary d-none d-md-block">Type enter to search</span>
+      <span v-on:click="openSearchBar()" class="animate text-dark d-none d-md-block">Type enter to search</span>
       <div class="d-flex justify-content-center align-items-center right-items">
-        <fa :click="on" class="text-white icon d-md-none" :icon="['fas', 'search']" />
+        <fa v-on:click="openSearchBar()" class="animate text-white icon d-md-none" :icon="['fas', 'search']" />
         <fa class="text-white icon d-none d-md-block" :icon="['fas', 'plus-circle']" />
         <div class="vertical-bar d-none d-md-block"></div>
         <fa class="text-white icon" :icon="['far', 'bell']" />
@@ -18,17 +18,17 @@
 <script lang="ts">
 import {
   Component,
+  Mutation,
   Vue,
 } from "nuxt-property-decorator";
-interface User {
-  firstName: string;
-  lastName: string;
-}
 
 @Component
 export default class Navbar extends Vue {
-  message: string = "This is a message";
+  @Mutation('gifState/setStatusBar') setStatusBar:any;
 
+  openSearchBar(){
+    this.setStatusBar(true);
+  }
 }
 </script>
 
