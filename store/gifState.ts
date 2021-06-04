@@ -4,6 +4,7 @@ import { Pagination, TrendingGif } from '../models/trending-gif.interface';
 import { Gif } from '../models/gif.interface';
 import { Rating } from '../models/rating.enum';
 import { GifByID } from '../models/gif-by-id.interface';
+import { text } from '@fortawesome/fontawesome-svg-core';
 
 @Module({})
 export default class GifState extends VuexModule {
@@ -13,6 +14,7 @@ export default class GifState extends VuexModule {
   //Variables to handle array of gifs searched
   gifs: Gif[] = [];
   total: number = 0;
+  text_searched: string = "";
 
   //Variable to stop making calls when all gifs had been loaded
   canAddMoreGifs: boolean = true;
@@ -68,6 +70,11 @@ export default class GifState extends VuexModule {
     this.gif = gif;
   }
 
+  @Mutation
+  setTextSearched(text: string){
+    this.text_searched = text;
+  }
+
 
   @Action({ rawError: true })
   async trendingGifs(data: { limit: any, rating: Rating }) {
@@ -78,6 +85,7 @@ export default class GifState extends VuexModule {
 
   @Action({ rawError: true })
   async searchGifs(data: { text: string, limit: number, offset: number }) {
+    this.context.commit('setTextSearched', data.text);
     let axioResponse: AxiosResponse<TrendingGif> = await $axios.get(`https://api.giphy.com/v1/gifs/search?api_key=a8OMRUP4eiqbeYG0E599hEFqMXZZBQxP&q=${data.text}&limit=${data.limit}&offset=${data.offset}&rating=g&lang=es`);
     if (this.showTrending == true) {
       this.context.commit('addMoreGifs', true);

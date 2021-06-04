@@ -2,6 +2,7 @@
   <div>
     <Searchbar @onSearch="onSearch"></Searchbar>
     <Loading v-if="loadingData == true" />
+
     <div v-else>
       <div class="my-4">
         <div
@@ -19,7 +20,7 @@
           v-if="$store.state.gifState.showTrending == false"
         >
           <div>
-            <span class="searched-title">{{ text_to_search }}</span
+            <span class="searched-title">{{ $store.state.gifState.text_searched }}</span
             >&nbsp;<span class="total-gifs"
               >{{ $store.state.gifState.total }} GIFs</span
             >
@@ -33,17 +34,26 @@
         </div>
       </div>
 
-      <no-ssr>
+      <div class="card-columns mb-5">
+        <GifPreview
+          v-for="gif in $store.state.gifState.gifs"
+          :key="gif.id"
+          :gif="gif"
+        />
+      </div>
+      
+      <!-- <no-ssr>
         <vue-masonry-wall
           :items="$store.state.gifState.gifs"
           :options="{ width: 400, padding: 10 }"
+          :ssr="{columns: 2}"
           @append="appendGifs"
         >
           <template v-slot:default="{ item }">
             <GifPreview :gif="item" />
           </template>
         </vue-masonry-wall>
-      </no-ssr>
+      </no-ssr> -->
     </div>
   </div>
 </template>
@@ -79,15 +89,22 @@ export default class Home extends Vue {
   @Mutation("gifState/resetGifArray") resetGifArray: any;
 
   offset = 0;
-  text_to_search!: string;
   loadingData: boolean = false;
+  appendingGifs: boolean = false;
   gifs: Gif[] = (this.$store.state.gifState as GifState).gifs;
 
   created() {
-    console.log(this.$store.state);
     if (!this.gifs.length) {
       this.getTrendingGifs();
     }
+  }
+
+  beforeMount() {
+    window.addEventListener("scroll", this.handleScroll);
+  }
+
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
   }
 
   async getTrendingGifs() {
@@ -97,7 +114,6 @@ export default class Home extends Vue {
   }
 
   async onSearch(text: string) {
-    this.text_to_search = text;
     this.offset = 0;
     this.loadingData = true;
     this.resetGifArray();
@@ -105,14 +121,25 @@ export default class Home extends Vue {
     this.loadingData = false;
   }
 
-  appendGifs() {
+  handleScroll() {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      this.appendGifs();
+    }
+  }
+
+  async appendGifs() {
     //We will only append gifs if we are searching, this is because trending endpoint does not give the option to bring more than a specific number of items.
-    if ((this.$store.state.gifState as GifState).showTrending == false) {
-      this.searchGifsAction({
-        text: this.text_to_search,
+    if (
+      (this.$store.state.gifState as GifState).showTrending == false &&
+      this.appendingGifs == false
+    ) {
+      this.appendingGifs = true;
+      await this.searchGifsAction({
+        text: this.$store.state.gifState.text_searched,
         limit: 30,
         offset: (this.offset += 30),
       });
+      this.appendingGifs = false;
     }
   }
 }

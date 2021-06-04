@@ -1,9 +1,9 @@
 
 <template>
-  <div class="row" v-if="isLoaded">
+  <div class="row my-4" v-if="isLoaded">
     <div class="col-lg-2 col-md-3">
-      <div class="px-3">
-        <div v-if="user" class="d-flex flex-row">
+      <div>
+        <div v-if="user" class="d-flex flex-row justify-content-md-center align-items-md-center">
           <img class="image user-avatar" :src="user.avatar_url" />
           <div class="d-flex ml-3 flex-column justify-content-around">
             <span class="title">{{user.display_name}}</span>
@@ -27,13 +27,16 @@
       </div>
     </div>
     <div class="col-lg-8 col-md-6">
-      <span class="title">{{gif.title}}</span>
-      <div class="d-flex justify-content-start align-items-center">
-        <img style="backgroud-color: pink;" class="image gif-image" :src="gif.images.original.url" alt />
+      <div class="mt-4 mt-md-0">
+        <span class="title">{{gif.title}}</span>
+        <div class="d-flex justify-content-start align-items-center mt-3">
+          <img style="backgroud-color: pink;" class="image gif-image" :src="gif.images.original.url" alt />
+        </div>
       </div>
+      
     </div>
     <div class="col-lg-2 col-md-3">
-      <div id="infomation" class="d-flex flex-column justify-content-between">
+      <div id="infomation" class="d-flex flex-column justify-content-between mt-4 mt-md-0">
         <span
           class="title"
         >Dimensions: {{gif.images.original.width}} x {{gif.images.original.height}} px</span>

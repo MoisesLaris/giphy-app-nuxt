@@ -1,6 +1,6 @@
 <template>
   <nuxt-link v-if="gif" :to="'/gifs/' + gif.id">
-    <div class="image" :style="{'height': gif.images.preview_gif.height, 'width': gif.images.preview_gif.width}">
+    <div class="image mb-4">
       <img class="animate" :src="gif.images.preview_gif.url" alt />
     </div>
   </nuxt-link>
@@ -15,6 +15,7 @@ export default class GifPreview extends Vue {
   @Prop() gif!: Gif;
 
   created(){
+    console.log(this.gif);
   }
 
 }
