@@ -5,14 +5,16 @@
       size="lg"
       :hide-footer="true"
       :hide-header="true"
+      @hide="onHideModal"
     >
       <div class="d-flex flex-row justify-content-center align-items-center">
         <fa class="search-icon" :icon="['fas', 'search']" />
         <input
+          id="search-input"
           ref="search"
           class="form-control form-control-lg"
           type="text"
-          placeholder="Search ..."
+          placeholder="Search all the GIFs"
           v-model="text_search"
           autofocus
         />
@@ -52,12 +54,19 @@ export default class Searchbar extends Vue {
     this.unsubscribeStore();
   }
 
+  onHideModal() {
+    this.setStatusBar(false);
+  }
+
   onKeyUp(event: KeyboardEvent) {
-    console.log(event);
+    event.preventDefault();
     if (event.key == "Enter") {
       let showModal = (this.$store.state.gifState as GifState).showSearchBar;
-      this.setStatusBar(!showModal)
-      this.openModal((this.$store.state.gifState as GifState).showSearchBar, "Enter");
+      this.setStatusBar(!showModal);
+      this.openModal(
+        (this.$store.state.gifState as GifState).showSearchBar,
+        "Enter"
+      );
     }
   }
 
@@ -81,11 +90,20 @@ export default class Searchbar extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+#search-input {
+  &::placeholder {
+    color: rgba(128, 128, 128, 0.5);
+    font-weight: bold;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+  }
+}
+
 .search-icon {
   margin-left: 1rem;
   font-size: 1.5rem;
-  color: gray;
+  color: rgba(128, 128, 128, 0.5);
 }
 
 .form-control {

@@ -35,7 +35,7 @@ export interface Onclick {
 }
 
 export interface Images {
-    original:                 { [key: string]: string };
+    original:                 Original;
     downsized:                The480_WStill;
     downsized_large:          The480_WStill;
     downsized_medium:         The480_WStill;
@@ -60,6 +60,19 @@ export interface Images {
     hd?:                      The4_K;
     "480w_still":             The480_WStill;
     "4k"?:                    The4_K;
+}
+
+export interface Original{
+    frames: string;
+    hash: string;
+    height: string;
+    mp4: string;
+    mp4_size: string;
+    size: string;
+    url: string;
+    webp: string;
+    webp_size: string;
+    width: string;
 }
 
 export interface The480_WStill {

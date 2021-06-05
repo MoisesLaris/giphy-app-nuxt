@@ -30,7 +30,11 @@
       <div class="mt-4 mt-md-0">
         <span class="title">{{gif.title}}</span>
         <div class="d-flex justify-content-start align-items-center mt-3">
-          <img style="backgroud-color: pink;" class="image gif-image" :src="gif.images.original.url" alt />
+          <!-- <img style="backgroud-color: pink;" class="image gif-image" :src="gif.images.original.mp4" alt /> -->
+          <video class="image gif-image" :width="gif.images.original.width" :height="gif.images.original.height" autoplay loop muted playsinline>
+            <source :src="gif.images.original.mp4" type="video/mp4">
+            <img :src="gif.images.original.mp4"/>
+          </video>
         </div>
       </div>
       
@@ -69,14 +73,13 @@ import GifState from "~/store/gifState";
 import Loading from "~/components/Loading.vue"; // @ is an alias to /src
 
 @Component({
-  components:{
-    Loading
-  }
+  components: {
+    Loading,
+  },
 })
-
 @Component
 export default class DetailedGif extends Vue {
-  @Action('gifState/gifById') getGif: any;
+  @Action("gifState/gifById") getGif: any;
 
   gif!: Gif;
   user!: User | undefined;
@@ -161,7 +164,7 @@ export default class DetailedGif extends Vue {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 
   & > span {
     width: 130px;
