@@ -14,10 +14,6 @@ import { Gif } from "~/models/gif.interface";
 export default class GifPreview extends Vue {
   @Prop() gif!: Gif;
 
-  created(){
-    console.log(this.gif);
-  }
-
 }
 </script>
 
