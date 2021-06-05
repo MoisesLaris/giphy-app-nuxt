@@ -4,9 +4,9 @@
     <div class="row my-4">
       <div class="col-lg-2 col-md-3">
         <div>
-          <div v-if="user" class="d-flex flex-row justify-content-md-start align-items-md-center">
-            <img class="image user-avatar" :src="user.avatar_url" />
-            <div class="d-flex ml-3 flex-column justify-content-around">
+          <div v-if="user" class="d-flex flex-row flex-wrap justify-content-md-start align-items-md-center">
+            <img class="image user-avatar mr-3" :src="user.avatar_url" />
+            <div class="d-flex flex-column justify-content-around">
               <span>{{user.display_name}}</span>
               <span class="description">
                 @{{user.username}}

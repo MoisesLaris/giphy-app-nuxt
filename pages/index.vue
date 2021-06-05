@@ -47,10 +47,9 @@ import Navbar from "@/components/Navbar.vue"; // @ is an alias to /src
 import Searchbar from "@/components/Searchbar.vue"; // @ is an alias to /src
 import GifPreview from "@/components/GifPreview.vue"; // @ is an alias to /src
 import Loading from "@/components/Loading.vue"; // @ is an alias to /src
-import { Gif } from "~/models/gif.interface";
 import { Rating } from "~/models/rating.enum";
 import GifState from "~/store/gifState";
-import { Middleware } from "@nuxt/types";
+import { Gif } from "~/models/gif.interface";
 
 @Component({
   components: {
