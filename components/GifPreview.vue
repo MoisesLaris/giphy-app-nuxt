@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link v-if="gif" :to="'/gifs/' + gif.id">
+  <nuxt-link v-if="gif" :to="'/gif/' + gif.id">
     <div class="image mb-4">
       <img class="animate" :src="gif.images.preview_gif.url" alt />
     </div>

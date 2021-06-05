@@ -3,10 +3,10 @@
   <div class="row my-4" v-if="isLoaded">
     <div class="col-lg-2 col-md-3">
       <div>
-        <div v-if="user" class="d-flex flex-row justify-content-md-center align-items-md-center">
+        <div v-if="user" class="d-flex flex-row justify-content-md-start align-items-md-center">
           <img class="image user-avatar" :src="user.avatar_url" />
           <div class="d-flex ml-3 flex-column justify-content-around">
-            <span class="title">{{user.display_name}}</span>
+            <span>{{user.display_name}}</span>
             <span class="description">
               @{{user.username}}
               <fa
@@ -18,37 +18,58 @@
           </div>
         </div>
         <div class="description mt-3">{{gif.title}}</div>
-        <div class="title mt-3">Follow on:</div>
-        <div class="d-flex flex-row social-network-icons mt-3">
-          <fa class="animate fb" :icon="['fab', 'facebook-square']" />
-          <fa class="animate ig" :icon="['fab', 'instagram']" />
-          <fa class="animate yt" :icon="['fab', 'youtube']" />
+        <div class="d-flex flex-row flex-wrap justify-content-between">
+          <div class="mr-4">
+            <div class="mt-3">Follow on:</div>
+            <div class="d-flex flex-row social-network-icons mt-3">
+              <fa class="animate fb" :icon="['fab', 'facebook-square']" />
+              <fa class="animate ig" :icon="['fab', 'instagram']" />
+              <fa class="animate yt" :icon="['fab', 'youtube']" />
+            </div>
+          </div>
+          <div class="mr-4">
+            <div class="mt-3">Share:</div>
+            <fa @click="onClickShare" class="animate mt-3" :icon="['fas', 'share-alt']" />
+          </div>
         </div>
       </div>
     </div>
     <div class="col-lg-8 col-md-6">
       <div class="mt-4 mt-md-0">
-        <span class="title">{{gif.title}}</span>
-        <div class="d-flex justify-content-start align-items-center mt-3">
+        <span class="text-md-center">{{gif.title}}</span>
+        <div class="d-flex justify-content-md-start justify-content-center align-items-center mt-3">
           <!-- <img style="backgroud-color: pink;" class="image gif-image" :src="gif.images.original.mp4" alt /> -->
-          <video class="image gif-image" :width="gif.images.original.width" :height="gif.images.original.height" autoplay loop muted playsinline>
-            <source :src="gif.images.original.mp4" type="video/mp4">
-            <img :src="gif.images.original.mp4"/>
+          <video
+            class="image gif-image"
+            :width="gif.images.original.width"
+            :height="gif.images.original.height"
+            autoplay
+            loop
+            muted
+            playsinline
+          >
+            <source :src="gif.images.original.mp4" type="video/mp4" />
+            <img :src="gif.images.original.mp4" />
           </video>
         </div>
       </div>
-      
     </div>
     <div class="col-lg-2 col-md-3">
-      <div id="infomation" class="d-flex flex-column justify-content-between mt-4 mt-md-0">
-        <span
-          class="title"
-        >Dimensions: {{gif.images.original.width}} x {{gif.images.original.height}} px</span>
-        <span class="title">Uploaded: {{gif.import_datetime | formatDate}}</span>
-        <span class="title">Size: {{gif.images.original.size | byteFilter}}</span>
-        <span class="title">Rating: {{gif.rating}}</span>
-        <span class="title">Frames: {{gif.images.original.frames}}</span>
-        <span class="title">
+      <div class="d-flex justify-content-end mt-4 mt-md-0">
+        <div class="arrow-btn">
+          <fa class="animate" :icon="['fas', 'chevron-left']" />
+        </div>
+        <div class="arrow-btn">
+          <fa class="animate" :icon="['fas', 'chevron-right']" />
+        </div>
+      </div>
+      <div id="infomation" class="d-flex flex-column justify-content-between mt-3">
+        <span>Dimensions: {{gif.images.original.width}} x {{gif.images.original.height}} px</span>
+        <span>Uploaded: {{gif.import_datetime | formatDate}}</span>
+        <span>Size: {{gif.images.original.size | byteFilter}}</span>
+        <span>Rating: {{gif.rating}}</span>
+        <span>Frames: {{gif.images.original.frames}}</span>
+        <span>
           Flag this GIF
           <fa class="ml-2" :icon="['fas', 'flag']" />
         </span>
@@ -57,9 +78,18 @@
         <span v-for="(tag, index) in getTags(gif.title)" :key="tag + index">#{{tag}}</span>
       </div>
     </div>
+    <b-alert
+      v-model="showBottom"
+      class="position-fixed fixed-bottom m-0 rounded-0"
+      style="z-index: 2000;"
+      variant="primary"
+      dismissible
+    >
+    Link copied!
+    </b-alert>
   </div>
   <div v-else>
-    <Loading/>
+    <Loading />
   </div>
 </template>
 
@@ -74,8 +104,8 @@ import Loading from "~/components/Loading.vue"; // @ is an alias to /src
 
 @Component({
   components: {
-    Loading,
-  },
+    Loading
+  }
 })
 @Component
 export default class DetailedGif extends Vue {
@@ -84,6 +114,7 @@ export default class DetailedGif extends Vue {
   gif!: Gif;
   user!: User | undefined;
   isLoaded: boolean = false;
+  showBottom: boolean = false;
 
   async created() {
     let id: string = this.$route.params.id;
@@ -101,14 +132,24 @@ export default class DetailedGif extends Vue {
   getTags(title: string): string[] {
     return title.split(" ", 3);
   }
+
+  //The url will be copied un our clipboard
+  onClickShare() {
+    var input = document.body.appendChild(document.createElement("input"));
+    input.value = window.location.hostname + this.$route.path;
+    input.focus();
+    input.select();
+    document.execCommand("copy");
+    input?.parentNode?.removeChild(input);
+    this.showBottom = true;
+    setTimeout(() => {
+      this.showBottom = false;
+    }, 2000);
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-.title {
-  color: white;
-}
-
 .description {
   color: #a7a7a7;
   font-size: 0.85rem;
@@ -156,8 +197,8 @@ export default class DetailedGif extends Vue {
 }
 
 .gif-image {
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
 }
 
 .tags {
@@ -168,7 +209,7 @@ export default class DetailedGif extends Vue {
 
   & > span {
     width: 130px;
-    background-color: #464646;
+    background-color: #363636;
     color: white;
     border-radius: 10px;
     padding: 2px 5px;
@@ -176,4 +217,11 @@ export default class DetailedGif extends Vue {
     text-align: center;
   }
 }
+
+.arrow-btn{
+  background-color: #363636;
+  padding: 1px 7px;
+  margin-left: 10px;
+}
+
 </style>

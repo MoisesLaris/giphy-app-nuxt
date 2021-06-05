@@ -20,28 +20,22 @@
           v-if="$store.state.gifState.showTrending == false"
         >
           <div>
-            <span class="searched-title">{{ $store.state.gifState.text_searched }}</span
-            >&nbsp;<span class="total-gifs"
-              >{{ $store.state.gifState.total }} GIFs</span
-            >
+            <span class="searched-title">{{ $store.state.gifState.text_searched }}</span>&nbsp;
+            <span class="total-gifs">{{ $store.state.gifState.total }} GIFs</span>
           </div>
           <div>
-            <span class="sort"
-              ><b class="mr-2">Sort:</b>
-              <b class="mr-2">Relevant</b> Newest</span
-            >
+            <span class="sort">
+              <b class="mr-2">Sort:</b>
+              <b class="mr-2">Relevant</b> Newest
+            </span>
           </div>
         </div>
       </div>
 
       <div class="card-columns mb-5">
-        <GifPreview
-          v-for="gif in $store.state.gifState.gifs"
-          :key="gif.id"
-          :gif="gif"
-        />
+        <GifPreview v-for="gif in $store.state.gifState.gifs" :key="gif.id" :gif="gif" />
       </div>
-      
+
       <!-- <no-ssr>
         <vue-masonry-wall
           :items="$store.state.gifState.gifs"
@@ -53,7 +47,7 @@
             <GifPreview :gif="item" />
           </template>
         </vue-masonry-wall>
-      </no-ssr> -->
+      </no-ssr>-->
     </div>
   </div>
 </template>
@@ -78,8 +72,8 @@ import { Action, Mutation } from "nuxt-property-decorator";
     VueMasonryWall,
     NoSSR,
     Searchbar,
-    Loading,
-  },
+    Loading
+  }
 })
 @Component
 export default class Home extends Vue {
@@ -97,6 +91,11 @@ export default class Home extends Vue {
     if (!this.gifs.length) {
       this.getTrendingGifs();
     }
+    this.$nuxt.$on("pushState", (params: any) => {
+      // do your logic with params
+      params.title = 'url';
+      params.url = '/url';
+    });
   }
 
   beforeMount() {
@@ -137,7 +136,7 @@ export default class Home extends Vue {
       await this.searchGifsAction({
         text: this.$store.state.gifState.text_searched,
         limit: 30,
-        offset: (this.offset += 30),
+        offset: this.offset += 30
       });
       this.appendingGifs = false;
     }

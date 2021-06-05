@@ -16,7 +16,7 @@ export default {
 
 <style>
 .error-container {
-  background-color: rgb(18, 18, 18);
+  background-color: #151d23;
   width: 100%;
   height: 100vh;
 }
