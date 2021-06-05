@@ -31,7 +31,7 @@ export default class Navbar extends Vue {
   }
 
   reloadPage(){
-    this.$nuxt.$router.push({ path: "/"});
+    location.replace('/')
   }
 }
 </script>

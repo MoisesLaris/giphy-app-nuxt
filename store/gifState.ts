@@ -100,7 +100,11 @@ export default class GifState extends VuexModule {
 
   @Action({ rawError: true })
   async gifById(id: number) {
-    let axioResponse: AxiosResponse<GifByID> = await $axios.get(`https://api.giphy.com/v1/gifs/${id}?api_key=a8OMRUP4eiqbeYG0E599hEFqMXZZBQxP`);
-    this.context.commit('saveGifById', axioResponse.data.data);
+    try {
+      let axioResponse: AxiosResponse<GifByID> = await $axios.get(`https://api.giphy.com/v1/gifs/${id}?api_key=a8OMRUP4eiqbeYG0E599hEFqMXZZBQxP`);
+      this.context.commit('saveGifById', axioResponse.data.data);
+    } catch (error) {
+      this.context.commit('saveGifById', null);
+    }
   }
 }

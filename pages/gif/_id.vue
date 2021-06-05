@@ -1,15 +1,18 @@
 
 <template>
   <div v-if="isLoaded">
-    <div class="row my-4">
+    <div class="row my-4" v-if="gif">
       <div class="col-lg-2 col-md-3">
         <div>
-          <div v-if="user" class="d-flex flex-row flex-wrap justify-content-md-start align-items-md-center">
+          <div
+            v-if="user"
+            class="d-flex flex-row flex-wrap justify-content-md-start align-items-md-center"
+          >
             <img class="image user-avatar mr-3" :src="user.avatar_url" />
             <div class="d-flex flex-column justify-content-around">
-              <span>{{user.display_name}}</span>
+              <span>{{ user.display_name }}</span>
               <span class="description">
-                @{{user.username}}
+                @{{ user.username }}
                 <fa
                   v-if="user.is_verified"
                   class="text-success icon"
@@ -18,7 +21,7 @@
               </span>
             </div>
           </div>
-          <div class="description mt-3">{{gif.title}}</div>
+          <div class="description mt-3">{{ gif.title }}</div>
           <div class="d-flex flex-row flex-wrap justify-content-between">
             <div class="mr-4">
               <div class="mt-3">Follow on:</div>
@@ -30,14 +33,18 @@
             </div>
             <div class="mr-4">
               <div class="mt-3">Share:</div>
-              <fa @click="onClickShare" class="animate mt-3" :icon="['fas', 'share-alt']" />
+              <fa
+                @click="onClickShare"
+                class="animate mt-3"
+                :icon="['fas', 'share-alt']"
+              />
             </div>
           </div>
         </div>
       </div>
       <div class="col-lg-8 col-md-6">
         <div class="mt-4 mt-md-0">
-          <span class="text-md-center title">{{gif.title}}</span>
+          <span class="text-md-center title">{{ gif.title }}</span>
           <div
             class="d-flex justify-content-md-start justify-content-center align-items-center mt-3"
           >
@@ -65,35 +72,48 @@
             <fa class="animate" :icon="['fas', 'chevron-right']" />
           </div>
         </div>
-        <div id="infomation" class="d-flex flex-column justify-content-between mt-3">
-          <span>Dimensions: {{gif.images.original.width}} x {{gif.images.original.height}} px</span>
-          <span>Uploaded: {{gif.import_datetime | formatDate}}</span>
-          <span>Size: {{gif.images.original.size | byteFilter}}</span>
-          <span>Rating: {{gif.rating}}</span>
-          <span>Frames: {{gif.images.original.frames}}</span>
+        <div
+          id="infomation"
+          class="d-flex flex-column justify-content-between mt-3"
+        >
+          <span
+            >Dimensions: {{ gif.images.original.width }} x
+            {{ gif.images.original.height }} px</span
+          >
+          <span>Uploaded: {{ gif.import_datetime | formatDate }}</span>
+          <span>Size: {{ gif.images.original.size | byteFilter }}</span>
+          <span>Rating: {{ gif.rating }}</span>
+          <span>Frames: {{ gif.images.original.frames }}</span>
           <span>
             Flag this GIF
             <fa class="ml-2" :icon="['fas', 'flag']" />
           </span>
         </div>
         <div class="tags">
-          <span v-for="(tag, index) in getTags(gif.title)" :key="tag + index">#{{tag}}</span>
+          <span v-for="(tag, index) in getTags(gif.title)" :key="tag + index"
+            >#{{ tag }}</span
+          >
         </div>
       </div>
       <b-alert
         v-model="showBottom"
         class="position-fixed fixed-bottom m-0 rounded-0"
-        style="z-index: 2000;"
+        style="z-index: 2000"
         variant="primary"
         dismissible
-      >Link copied!</b-alert>
+        >Link copied!</b-alert
+      >
     </div>
 
-    <div class="row justify-content-end">
+    <div v-if="gif" class="row justify-content-end">
       <div class="col-lg-10 col-md-9">
         <span class="title">Related GIFs</span>
         <div class="row">
-          <div v-for="(relatedGif, index) in getRelatedGifs()" :key="relatedGif + ' - ' + index" class="col-lg-3 col-md-4 col-sm-12">
+          <div
+            v-for="(relatedGif, index) in getRelatedGifs()"
+            :key="relatedGif + ' - ' + index"
+            class="col-lg-3 col-md-4 col-sm-12"
+          >
             <div class="img-relative">
               <img class="img-absolute" :src="relatedGif" />
             </div>
@@ -101,7 +121,13 @@
         </div>
       </div>
     </div>
-
+    <div
+      v-else
+      class="d-flex flex-column justify-content-center align-items-center not-found"
+    >
+      <fa class="text-danger fa-2x" :icon="['fas', 'exclamation-circle']" />
+      <span>GIF not found</span>
+    </div>
   </div>
   <div v-else>
     <Loading />
@@ -119,8 +145,8 @@ import Loading from "~/components/Loading.vue"; // @ is an alias to /src
 
 @Component({
   components: {
-    Loading
-  }
+    Loading,
+  },
 })
 @Component
 export default class DetailedGif extends Vue {
@@ -146,7 +172,7 @@ export default class DetailedGif extends Vue {
     "https://media0.giphy.com/media/LmNwrBhejkK9EFP504/100.gif?cid=86a3e691jl247e4wy8hc1mwgaad98lgjmcc9zfoib55zv10i&rid=100.gif&ct=g",
     "https://media3.giphy.com/media/du3J3cXyzhj75IOgvA/100.gif?cid=86a3e691jl247e4wy8hc1mwgaad98lgjmcc9zfoib55zv10i&rid=100.gif&ct=g",
     "https://media1.giphy.com/media/9ryyKbbrq3usqur7ZX/100.gif?cid=86a3e691hl1mlte1lay57hpwufgwn030bre8q6218sdo9b4z&rid=100.gif&ct=g",
-    "https://media4.giphy.com/media/L94Vqmnz5PF1kzzDwv/100.gif?cid=86a3e691wz7wcrzhm3cpst3t7uhuy15ipsf6gcgva52q2qng&rid=100.gif&ct=g"
+    "https://media4.giphy.com/media/L94Vqmnz5PF1kzzDwv/100.gif?cid=86a3e691wz7wcrzhm3cpst3t7uhuy15ipsf6gcgva52q2qng&rid=100.gif&ct=g",
   ];
 
   async created() {
@@ -156,7 +182,8 @@ export default class DetailedGif extends Vue {
 
   async getGifById(id: string) {
     await this.getGif(id);
-    this.user = (this.$store.state.gifState as GifState).gif.user;
+
+    this.user = (this.$store.state.gifState as GifState).gif?.user;
     this.gif = (this.$store.state.gifState as GifState).gif;
     this.isLoaded = true;
   }
@@ -181,7 +208,7 @@ export default class DetailedGif extends Vue {
   }
 
   getRelatedGifs(): string[] {
-    let array = this.relatedGifs.map(obj => obj);
+    let array = this.relatedGifs.map((obj) => obj);
     return this.randomiseArray(array).splice(0, 8);
   }
 
@@ -278,5 +305,11 @@ export default class DetailedGif extends Vue {
   background-color: #363636;
   padding: 1px 7px;
   margin-left: 10px;
+}
+
+.not-found {
+  height: 500px;
+  font-size: 20px;
+  font-weight: bold;
 }
 </style>

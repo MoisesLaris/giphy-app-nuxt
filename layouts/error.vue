@@ -3,7 +3,6 @@
     <img class="border-bottom" src="~assets/img/logo/giphy-logo.png" alt="logo" />
     <h1 v-if="error.statusCode === 404" class="text-white">Page not found</h1>
     <h1 v-else>An error occurred</h1>
-    <NuxtLink to="/">Home page</NuxtLink>
   </div>
 </template>
 
