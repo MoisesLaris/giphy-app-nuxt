@@ -1,7 +1,7 @@
 export default {
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
-        title: 'giphy-app',
+        title: 'Giphy',
         htmlAttrs: {
             lang: 'en'
         },
@@ -11,7 +11,7 @@ export default {
             { hid: 'description', name: 'description', content: '' }
         ],
         link: [
-            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+            { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
         ]
     },
 
@@ -22,7 +22,6 @@ export default {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
-        { src: '~/plugins/vue-masonry', ssr: false },
         "~/plugins/date-filter",
         "~/plugins/byte-filter"
     ],

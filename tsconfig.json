@@ -34,10 +34,5 @@
     "node_modules",
     ".nuxt",
     "dist"
-  ],
-  "include": [
-    "custom/no-ssr.d.ts",
-    "custom/vue-masonry-wall.d.ts",
-    // "custom/vue-keypress.d.ts"
   ]
 }

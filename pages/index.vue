@@ -31,19 +31,6 @@
         </div>
         <nuxt-child class="mt-4" />
       </div>
-
-      <!-- <no-ssr>
-        <vue-masonry-wall
-          :items="$store.state.gifState.gifs"
-          :options="{ width: 400, padding: 10 }"
-          :ssr="{columns: 2}"
-          @append="appendGifs"
-        >
-          <template v-slot:default="{ item }">
-            <GifPreview :gif="item" />
-          </template>
-        </vue-masonry-wall>
-      </no-ssr>-->
     </div>
   </div>
 </template>
@@ -60,19 +47,15 @@ import Navbar from "@/components/Navbar.vue"; // @ is an alias to /src
 import Searchbar from "@/components/Searchbar.vue"; // @ is an alias to /src
 import GifPreview from "@/components/GifPreview.vue"; // @ is an alias to /src
 import Loading from "@/components/Loading.vue"; // @ is an alias to /src
-import VueMasonryWall from "vue-masonry-wall";
-import NoSSR from "vue-no-ssr";
 import { Gif } from "~/models/gif.interface";
 import { Rating } from "~/models/rating.enum";
 import GifState from "~/store/gifState";
-import { Middleware, Context } from "@nuxt/types";
+import { Middleware } from "@nuxt/types";
 
 @Component({
   components: {
     Navbar,
     GifPreview,
-    VueMasonryWall,
-    NoSSR,
     Searchbar,
     Loading
   },
@@ -111,7 +94,6 @@ export default class Home extends Vue {
     if(!route){
       route = this.$route;
     }
-    console.log(route)
     if (route?.path == "/search") {
       this.onSearch(route?.query?.search, false);
     } else {

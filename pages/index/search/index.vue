@@ -1,17 +1,17 @@
 <template>
-  <client-only>
-    <div class="card-columns mb-5">
-      <GifPreview v-for="gif in $store.state.gifState.gifs" :key="gif.id + '-' + index" :gif="gif" />
-    </div>
-  </client-only>
+  <GifGrind/>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Mutation } from "nuxt-property-decorator";
+import GifGrind from "@/components/GifGrind.vue";
 
-@Component
-export default class Search extends Vue {
-}
+@Component({
+  components: {
+    GifGrind
+  }
+})
+export default class Search extends Vue {}
 </script>
 
 <style>
