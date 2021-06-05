@@ -28,14 +28,6 @@ $ npm run start
 $ npm run generate
 ```
 
-## Branches
-
-The app that was deployed in Heroku is the one in the **nuxt-deploy** branch.
-
-This is because some features worked diferently in the production server, this will be fixed in the future.
-
-For now you can check the complete functionality in the **Master** branch.
-
 
 ##
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
