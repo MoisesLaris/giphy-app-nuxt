@@ -2,7 +2,6 @@
   <div>
     <Searchbar @onSearch="onSearch"></Searchbar>
     <Loading v-if="loadingData == true" />
-
     <div v-else>
       <div class="my-4">
         <div
@@ -30,10 +29,7 @@
             </span>
           </div>
         </div>
-      </div>
-
-      <div class="card-columns mb-5">
-        <GifPreview v-for="gif in $store.state.gifState.gifs" :key="gif.id" :gif="gif" />
+        <nuxt-child class="mt-4" />
       </div>
 
       <!-- <no-ssr>
@@ -53,7 +49,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import {
+  Component,
+  Vue,
+  Watch,
+  Action,
+  Mutation
+} from "nuxt-property-decorator";
 import Navbar from "@/components/Navbar.vue"; // @ is an alias to /src
 import Searchbar from "@/components/Searchbar.vue"; // @ is an alias to /src
 import GifPreview from "@/components/GifPreview.vue"; // @ is an alias to /src
@@ -63,7 +65,7 @@ import NoSSR from "vue-no-ssr";
 import { Gif } from "~/models/gif.interface";
 import { Rating } from "~/models/rating.enum";
 import GifState from "~/store/gifState";
-import { Action, Mutation } from "nuxt-property-decorator";
+import { Middleware, Context } from "@nuxt/types";
 
 @Component({
   components: {
@@ -73,14 +75,18 @@ import { Action, Mutation } from "nuxt-property-decorator";
     NoSSR,
     Searchbar,
     Loading
-  }
+  },
+  middleware: ["redirect"]
 })
-@Component
 export default class Home extends Vue {
   @Action("gifState/trendingGifs") getTrendingAction: any;
   @Action("gifState/searchGifs") searchGifsAction: any;
-
   @Mutation("gifState/resetGifArray") resetGifArray: any;
+
+  @Watch("$route", { immediate: false, deep: true })
+  onUrlChange(route: any) {
+    this.redirectDependingOnParams(route);
+  }
 
   offset = 0;
   loadingData: boolean = false;
@@ -89,13 +95,8 @@ export default class Home extends Vue {
 
   created() {
     if (!this.gifs.length) {
-      this.getTrendingGifs();
+      this.redirectDependingOnParams();
     }
-    this.$nuxt.$on("pushState", (params: any) => {
-      // do your logic with params
-      params.title = 'url';
-      params.url = '/url';
-    });
   }
 
   beforeMount() {
@@ -106,18 +107,33 @@ export default class Home extends Vue {
     window.removeEventListener("scroll", this.handleScroll);
   }
 
+  redirectDependingOnParams(route: any = null) {
+    if(!route){
+      route = this.$route;
+    }
+    console.log(route)
+    if (route?.path == "/search") {
+      this.onSearch(route?.query?.search, false);
+    } else {
+      this.getTrendingGifs();
+    }
+  }
+
   async getTrendingGifs() {
     this.loadingData = true;
     await this.getTrendingAction({ limit: 30, rating: Rating.G });
     this.loadingData = false;
   }
 
-  async onSearch(text: string) {
+  async onSearch(text: string, redirect: boolean = true) {
     this.offset = 0;
     this.loadingData = true;
     this.resetGifArray();
     await this.searchGifsAction({ text: text, limit: 30, offset: this.offset });
     this.loadingData = false;
+    if (redirect) {
+      this.$nuxt.$router.push({ path: "/search", query: { search: text } });
+    }
   }
 
   handleScroll() {

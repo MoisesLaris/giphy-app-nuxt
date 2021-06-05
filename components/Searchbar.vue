@@ -8,7 +8,7 @@
       @hide="onHideModal"
     >
       <div class="d-flex flex-row justify-content-center align-items-center">
-        <fa class="search-icon" :icon="['fas', 'search']" />
+        <fa class="lupe-icon" :icon="['fas', 'search']" />
         <input
           id="search-input"
           ref="search"
@@ -18,6 +18,7 @@
           v-model="text_search"
           autofocus
         />
+        <fa @click="onKeyUp({key: 'Enter'})" class="search-icon animate" :icon="['fas', 'caret-right']" />
       </div>
     </b-modal>
   </div>
@@ -59,7 +60,6 @@ export default class Searchbar extends Vue {
   }
 
   onKeyUp(event: KeyboardEvent) {
-    event.preventDefault();
     if (event.key == "Enter") {
       let showModal = (this.$store.state.gifState as GifState).showSearchBar;
       this.setStatusBar(!showModal);
@@ -100,10 +100,16 @@ export default class Searchbar extends Vue {
   }
 }
 
-.search-icon {
+.lupe-icon {
   margin-left: 1rem;
   font-size: 1.5rem;
   color: rgba(128, 128, 128, 0.5);
+}
+
+.search-icon {
+  margin-right: .5rem;
+  font-size: 2.5rem;
+  color: #4d4d4d;
 }
 
 .form-control {

@@ -1,8 +1,8 @@
 <template>
   <div class="container" style="border-bottom: 1px solid #212529">
     <div class="d-flex justify-content-between align-items-center p-4">
-      <img class="d-none d-md-block" src="~assets/img/logo/giphy-logo.png" height="30px" alt />
-      <img class="d-md-none" src="~assets/img/logo/logo.png" height="30px" alt />
+      <img @click="reloadPage" class="d-none d-md-block" src="~assets/img/logo/giphy-logo.png" height="30px" alt />
+      <img @click="reloadPage" class="d-md-none" src="~assets/img/logo/logo.png" height="30px" alt />
       <span v-on:click="openSearchBar()" class="animate text-dark d-none d-md-block">Type enter to search</span>
       <div class="d-flex justify-content-center align-items-center right-items">
         <fa v-on:click="openSearchBar()" class="animate text-white icon d-md-none" :icon="['fas', 'search']" />
@@ -28,6 +28,10 @@ export default class Navbar extends Vue {
 
   openSearchBar(){
     this.setStatusBar(true);
+  }
+
+  reloadPage(){
+    this.$nuxt.$router.push({ path: "/"});
   }
 }
 </script>
