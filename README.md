@@ -11,6 +11,13 @@ This app includes the follow libraries:
 
 Check out the [demo](https://giphy-nuxt-mls.herokuapp.com/trending) that was deployed in [Heroku](https://giphy-nuxt-mls.herokuapp.com/trending).
 
+## Configure
+Create a new file named `.env` on the root of your project with your APIKEY
+
+```
+APIKEY=<insert your apikey>
+```
+
 ## Build Setup
 
 ```bash
