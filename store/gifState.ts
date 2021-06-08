@@ -78,7 +78,7 @@ export default class GifState extends VuexModule {
 
   @Action({ rawError: true })
   async trendingGifs(data: { limit: any, rating: Rating }) {
-    let axioResponse: AxiosResponse<TrendingGif> = await $axios.get(`https://api.giphy.com/v1/gifs/trending?api_key=a8OMRUP4eiqbeYG0E599hEFqMXZZBQxP&limit=${data.limit}&rating=${data.rating}`);
+    let axioResponse: AxiosResponse<TrendingGif> = await $axios.get(`https://api.giphy.com/v1/gifs/trending?api_key=${process.env.APIKEY}&limit=${data.limit}&rating=${data.rating}`);
     this.context.commit('setTrendingStatus', true);
     this.context.commit('saveAndResetGifs', {gifs: axioResponse.data.data, total: axioResponse.data.pagination.total_count});
   }
@@ -86,7 +86,7 @@ export default class GifState extends VuexModule {
   @Action({ rawError: true })
   async searchGifs(data: { text: string, limit: number, offset: number }) {
     this.context.commit('setTextSearched', data.text);
-    let axioResponse: AxiosResponse<TrendingGif> = await $axios.get(`https://api.giphy.com/v1/gifs/search?api_key=a8OMRUP4eiqbeYG0E599hEFqMXZZBQxP&q=${data.text}&limit=${data.limit}&offset=${data.offset}&rating=g&lang=es`);
+    let axioResponse: AxiosResponse<TrendingGif> = await $axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${process.env.APIKEY}&q=${data.text}&limit=${data.limit}&offset=${data.offset}&rating=g&lang=es`);
     if (this.showTrending == true) {
       this.context.commit('addMoreGifs', true);
       this.context.commit('setTrendingStatus', false);
@@ -101,7 +101,7 @@ export default class GifState extends VuexModule {
   @Action({ rawError: true })
   async gifById(id: number) {
     try {
-      let axioResponse: AxiosResponse<GifByID> = await $axios.get(`https://api.giphy.com/v1/gifs/${id}?api_key=a8OMRUP4eiqbeYG0E599hEFqMXZZBQxP`);
+      let axioResponse: AxiosResponse<GifByID> = await $axios.get(`https://api.giphy.com/v1/gifs/${id}?api_key=${process.env.APIKEY}`);
       this.context.commit('saveGifById', axioResponse.data.data);
     } catch (error) {
       this.context.commit('saveGifById', null);
