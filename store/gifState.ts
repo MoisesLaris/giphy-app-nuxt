@@ -4,7 +4,6 @@ import { Pagination, TrendingGif } from '../models/trending-gif.interface';
 import { Gif } from '../models/gif.interface';
 import { Rating } from '../models/rating.enum';
 import { GifByID } from '../models/gif-by-id.interface';
-import { text } from '@fortawesome/fontawesome-svg-core';
 
 @Module({})
 export default class GifState extends VuexModule {

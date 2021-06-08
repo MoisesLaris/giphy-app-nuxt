@@ -3,6 +3,6 @@ import moment from 'moment'
 
 export default Vue.filter('formatDate', (value: any) => {
     if (value) {
-        return moment(String(value)).format('DD/MM/YYYY')
+        return moment(String(value), "YYYY-MM-DD hh:mm:ss").format('DD/MM/YYYY')
     }
 });
