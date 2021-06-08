@@ -8,21 +8,21 @@ import { GifByID } from '../models/gif-by-id.interface';
 @Module({})
 export default class GifState extends VuexModule {
   //Variable use to handle search bar state
-  showSearchBar: boolean = false;
+  public showSearchBar: boolean = false;
 
   //Variables to handle array of gifs searched
-  gifs: Gif[] = [];
-  total: number = 0;
-  text_searched: string = "";
+  public gifs: Gif[] = [];
+  private total: number = 0;
+  private text_searched: string = "";
 
   //Variable to stop making calls when all gifs had been loaded
-  canAddMoreGifs: boolean = true;
+  private canAddMoreGifs: boolean = true;
 
   //Variable to switch between trending and search
-  showTrending: boolean = true;
+  public showTrending: boolean = true;
 
   //Variable to handle gif by id
-  gif!: Gif;
+  public gif!: Gif;
 
   @Mutation
   setStatusBar(showSearchBar: boolean) {
